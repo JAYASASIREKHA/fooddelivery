@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Load Balancer
+  load-balancer:
+    build:
+      context: .
+      dockerfile: Dockerfile.loadbalancer
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - backend1
+      - backend2
+    networks:
+      - food-delivery-network
+
+  # Backend 1 - Node.js Microservice
+  backend1:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend1
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+    networks:
+      - food-delivery-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Backend 2 - Python Microservice
+  backend2:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend2
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+    networks:
+      - food-delivery-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  food-delivery-network:
+    driver: bridge
+

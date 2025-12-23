@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fb;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg,#00c853,#00bfa5);
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            margin: 5px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #e8f5e9;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.18);
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            background: #ffffff;
+            color: #00c853;
+        }
+
+        .nav-item-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .upgrade-box {
+            background: #ff6d00;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .upgrade-box button {
+            background: white;
+            color: #ff9800;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px 40px;
+            max-width: 900px;
+        }
+
+        .promo-banner {
+            background: #ffffff;
+            color: #2e7d32;
+            padding: 24px 28px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .promo-banner h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .promo-banner p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chef-illustration {
+            font-size: 64px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 22px;
+            color: #263238;
+        }
+
+        .view-all {
+            color: #00c853;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-item {
+            text-align: center;
+            padding: 18px;
+            background: #ffffff;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .category-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 200, 83, 0.25);
+        }
+
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .dish-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .favorite-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #ff9800;
+            cursor: pointer;
+        }
+
+        .dish-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .dish-rating {
+            color: #ff9800;
+            margin: 10px 0;
+        }
+
+        .dish-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .dish-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .dish-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00c853;
+        }
+
+        .add-btn {
+            background: #00c853;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recent-orders {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+        }
+
+        .recent-order-item {
+            min-width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            width: 350px;
+            background: #f9fafc;
+            padding: 30px 20px;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            right: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .balance-box {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .balance-box h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .balance-amount {
+            font-size: 26px;
+            font-weight: bold;
+            color: #263238;
+            margin-bottom: 15px;
+        }
+
+        .balance-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .balance-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .address-box {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .address-box h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .address-text {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .change-btn {
+            background: #00c853;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .order-menu {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .order-menu h4 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .order-item-quantity {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .order-item-price {
+            font-weight: bold;
+            color: #00c853;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .summary-row.total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .coupon-btn {
+            width: 100%;
+            background: #00c853;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #00c853;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .checkout-btn:hover, .coupon-btn:hover, .change-btn:hover {
+            background: #00b248;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+        .status-CREATED { background: #9e9e9e; }
+        .status-CONFIRMED { background: #03a9f4; }
+        .status-PREPARING { background: #ff9800; }
+        .status-OUT_FOR_DELIVERY { background: #673ab7; }
+        .status-DELIVERED { background: #4caf50; }
+        .status-CANCELLED { background: #f44336; }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .modal-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <div id="userInfo" style="padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 20px; display: none;">
+            <div style="color: white; font-weight: 600; margin-bottom: 5px;" id="userName">User Name</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 12px;" id="userEmail">user@example.com</div>
+            <button onclick="logout()" style="margin-top: 10px; width: 100%; padding: 8px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">Logout</button>
+        </div>
+        <div id="authButtons" style="padding: 20px;">
+            <button onclick="openLoginModal()" style="width: 100%; padding: 12px; background: white; color: #00c853; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Login</button>
+            <button onclick="openRegisterModal()" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 10px;">Register</button>
+            <button onclick="registerTestUsers()" style="width: 100%; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 12px;">Register Test Users</button>
+        </div>
+        <div class="nav-item active" onclick="showSection('dashboard')">
+            <span class="nav-item-icon">📊</span>
+            <span>Dashboard</span>
+        </div>
+        <a href="#" class="nav-item" onclick="showSection('orders'); return false;">
+            <span class="nav-item-icon">📋</span>
+            <span>Orders</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('restaurants'); return false;">
+            <span class="nav-item-icon">🏪</span>
+            <span>Restaurants</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('notifications'); return false;">
+            <span class="nav-item-icon">🔔</span>
+            <span>Notifications</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Promo Banner -->
+        <div class="promo-banner">
+            <div>
+                <h2>Get Up To 20% Discount On Your First Order</h2>
+                <p>Get the absolute best out of the best dishes that are prepared by the top 1% of chef around the world. Don't hesitate to get started now!</p>
+            </div>
+            <div class="chef-illustration">👨‍🍳</div>
+        </div>
+
+        <!-- Orders Page - Dishes, Cart, Payment -->
+        <div class="section hidden" id="ordersPageSection">
+            <!-- Category Section -->
+            <div class="section-header">
+                <h3>Browse Dishes</h3>
+            </div>
+            <div class="category-grid">
+                <div class="category-item" onclick="filterByCategory('all')">
+                    <div class="category-icon">🍽️</div>
+                    <div>All</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('burger')">
+                    <div class="category-icon">🍔</div>
+                    <div>Burger</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('beverage')">
+                    <div class="category-icon">☕</div>
+                    <div>Beverage</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('seafood')">
+                    <div class="category-icon">🐟</div>
+                    <div>Seafood</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('pizza')">
+                    <div class="category-icon">🍕</div>
+                    <div>Pizza</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('chicken')">
+                    <div class="category-icon">🍗</div>
+                    <div>Chicken</div>
+                </div>
+            </div>
+            
+            <!-- Available Dishes -->
+            <div class="section-header" style="margin-top: 30px;">
+                <h3>Available Dishes</h3>
+            </div>
+            <div class="dishes-grid" id="ordersDishesGrid"></div>
+            
+            <!-- Order History -->
+            <div class="section-header" style="margin-top: 40px;">
+                <h3>Order History</h3>
+                <a href="#" class="view-all" onclick="loadOrderHistory(); return false;">Refresh</a>
+            </div>
+            <div id="orderHistoryList" class="dishes-grid" style="grid-template-columns: repeat(2, 1fr);"></div>
+        </div>
+
+        <!-- Restaurants Page - Only Restaurant Management -->
+        <div class="section hidden" id="restaurantsPageSection">
+            <div class="section-header">
+                <h3>🍽️ Restaurant Management</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="change-btn" onclick="openRestaurantModal()" style="background: #00c853; color: white; padding: 12px 20px; font-size: 14px; font-weight: bold;">➕ Add Restaurant</button>
+                    <button class="change-btn" onclick="openMenuItemModal()" style="background: #ff9800; color: white; padding: 12px 20px; font-size: 14px; font-weight: bold;">🍕 Add Menu Item</button>
+                </div>
+            </div>
+            <div id="restaurantsPageList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;"></div>
+        </div>
+
+        <!-- Notifications Section - Order Confirmations and Delivery Messages -->
+        <div class="section hidden" id="notificationsSection">
+            <div class="section-header">
+                <h3>📬 Order Notifications</h3>
+                <a href="#" class="view-all" onclick="loadNotificationFeed(); return false;">Refresh</a>
+            </div>
+            <div id="notificationsList"></div>
+        </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal" id="orderDetailModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="orderDetailTitle">Order Details</h3>
+                <button class="close-btn" onclick="closeOrderDetailModal()">×</button>
+            </div>
+            <div id="orderDetailBody"></div>
+        </div>
+    </div>
+
+        <!-- Category Section (Popular filters) -->
+        <div class="section dashboard-section" id="categorySection">
+            <div class="section-header">
+                <h3>Category</h3>
+                <a href="#" class="view-all">View all ></a>
+            </div>
+            <div class="category-grid">
+                <div class="category-item" onclick="filterByCategory('burger')">
+                    <div class="category-icon">🍔</div>
+                    <div>Burger</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('beverage')">
+                    <div class="category-icon">☕</div>
+                    <div>Beverage</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('seafood')">
+                    <div class="category-icon">🐟</div>
+                    <div>Seafood</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('pizza')">
+                    <div class="category-icon">🍕</div>
+                    <div>Pizza</div>
+                </div>
+                <div class="category-item" onclick="filterByCategory('chicken')">
+                    <div class="category-icon">🍗</div>
+                    <div>Chicken</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Dishes Section -->
+        <div class="section dashboard-section" id="popularSection">
+            <div class="section-header">
+                <h3>Popular Dishes</h3>
+                <a href="#" class="view-all">View all ></a>
+            </div>
+            <div class="dishes-grid" id="dishesGrid">
+                <!-- Dishes will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Restaurants / Favourite Restaurants Section is injected dynamically -->
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+        <div class="balance-box">
+            <h4>Your Balance</h4>
+            <div class="balance-amount">$20.04 <span style="font-size: 18px; color: #ff9800;">+</span></div>
+            <div class="balance-icons">
+                <div class="balance-icon">💼</div>
+                <div class="balance-icon">💳</div>
+                <div class="balance-icon">🎁</div>
+                <div class="balance-icon">📊</div>
+            </div>
+        </div>
+
+        <div class="address-box">
+            <h4>Your Address</h4>
+            <div class="address-text">90 Street, 81</div>
+            <button class="change-btn">Change</button>
+            <div style="margin-top: 15px;">
+                <input type="text" placeholder="Add Details" style="width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 10px;">
+                <button class="change-btn" style="width: 100%;">Add Details</button>
+            </div>
+        </div>
+
+        <div class="order-menu">
+            <h4>Order Menu</h4>
+            <div id="orderItemsList">
+                <!-- Order items will be displayed here -->
+            </div>
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>$4.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="orderTotal">$0.00</span>
+                </div>
+            </div>
+            <button class="coupon-btn">
+                Get a coupon code? →
+            </button>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Restaurant Management Modal -->
+    <div class="modal" id="restaurantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Restaurant</h3>
+                <button class="close-btn" onclick="closeRestaurantModal()">×</button>
+            </div>
+            <form onsubmit="addRestaurant(event)">
+                <div class="form-group">
+                    <label>Restaurant Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Cuisine</label>
+                    <input type="text" name="cuisine">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" name="phone">
+                </div>
+                <button type="submit" class="modal-btn">Add Restaurant</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Menu Item Modal -->
+    <div class="modal" id="menuItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Menu Item</h3>
+                <button class="close-btn" onclick="closeMenuItemModal()">×</button>
+            </div>
+            <form onsubmit="addMenuItem(event)">
+                <div class="form-group">
+                    <label>Restaurant</label>
+                    <select name="restaurantId" id="menuRestaurantSelect" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" step="0.01" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Burger">Burger</option>
+                        <option value="Pizza">Pizza</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Beverage">Beverage</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="modal-btn" style="flex: 1;">Add Menu Item</button>
+                    <button type="button" class="modal-btn" onclick="closeMenuItemModal()" style="background: #999; flex: 0 0 auto; padding: 12px 20px;">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login</h3>
+                <button class="close-btn" onclick="closeLoginModal()">×</button>
+            </div>
+            <form onsubmit="login(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="modal-btn">Login</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span style="color: #666;">Don't have an account? </span>
+                    <a href="#" onclick="closeLoginModal(); openRegisterModal(); return false;" style="color: #00c853; font-weight: 600;">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Account</h3>
+                <button class="close-btn" onclick="closeRegisterModal()">×</button>
+            </div>
+            <form onsubmit="register(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Phone (Optional)</label>
+                    <input type="tel" name="phone" placeholder="+1234567890">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Create a password" minlength="6">
+                </div>
+                <button type="submit" class="modal-btn">Register</button>
+                <div style="text-align: center; margin-top: 15px;">
+                    <span style="color: #666;">Already have an account? </span>
+                    <a href="#" onclick="closeRegisterModal(); openLoginModal(); return false;" style="color: #00c853; font-weight: 600;">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        let restaurants = [];
+        let menuItems = [];
+        let cart = {};
+        let currentCategory = 'all';
+        let currentRestaurantsFilter = 'all';
+        let favoriteRestaurants = new Set(JSON.parse(localStorage.getItem('favoriteRestaurants') || '[]'));
+        let lastOrders = [];
+        
+        // Authentication state
+        let currentUser = null;
+        let authToken = localStorage.getItem('authToken');
+        
+        // Check if user is logged in on page load
+        if (authToken) {
+            checkAuth();
+        }
+        
+        function updateAuthUI() {
+            const userInfo = document.getElementById('userInfo');
+            const authButtons = document.getElementById('authButtons');
+            
+            if (currentUser) {
+                userInfo.style.display = 'block';
+                authButtons.style.display = 'none';
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+            } else {
+                userInfo.style.display = 'none';
+                authButtons.style.display = 'block';
+            }
+        }
+        
+        async function checkAuth() {
+            if (!authToken) {
+                currentUser = null;
+                updateAuthUI();
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (res.ok) {
+                    currentUser = await res.json();
+                    updateAuthUI();
+                } else {
+                    // Token invalid, clear it
+                    localStorage.removeItem('authToken');
+                    authToken = null;
+                    currentUser = null;
+                    updateAuthUI();
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                currentUser = null;
+                updateAuthUI();
+            }
+        }
+        
+        async function register(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.ok) {
+                    const result = await res.json();
+                    authToken = result.token;
+                    currentUser = result.user;
+                    localStorage.setItem('authToken', authToken);
+                    updateAuthUI();
+                    showNotification('Registration successful! Welcome, ' + currentUser.name + '!', 'success');
+                    closeRegisterModal();
+                } else {
+                    const error = await res.json();
+                    showNotification('Registration failed: ' + error.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error during registration', 'error');
+            }
+        }
+        
+        async function login(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.ok) {
+                    const result = await res.json();
+                    authToken = result.token;
+                    currentUser = result.user;
+                    localStorage.setItem('authToken', authToken);
+                    updateAuthUI();
+                    showNotification('Login successful! Welcome back, ' + currentUser.name + '!', 'success');
+                    closeLoginModal();
+                } else {
+                    const error = await res.json();
+                    showNotification('Login failed: ' + error.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error during login', 'error');
+            }
+        }
+        
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            updateAuthUI();
+            showNotification('Logged out successfully', 'info');
+        }
+        
+        async function registerTestUsers() {
+            const testUsers = [
+                { name: 'John Doe', email: 'john@example.com', password: 'password123', phone: '+1234567890' },
+                { name: 'Jane Smith', email: 'jane@example.com', password: 'password123', phone: '+1234567891' },
+                { name: 'Mike Johnson', email: 'mike@example.com', password: 'password123', phone: '+1234567892' },
+                { name: 'Sarah Williams', email: 'sarah@example.com', password: 'password123', phone: '+1234567893' },
+                { name: 'David Brown', email: 'david@example.com', password: 'password123', phone: '+1234567894' },
+                { name: 'Emily Davis', email: 'emily@example.com', password: 'password123', phone: '+1234567895' },
+                { name: 'Chris Wilson', email: 'chris@example.com', password: 'password123', phone: '+1234567896' },
+                { name: 'Lisa Anderson', email: 'lisa@example.com', password: 'password123', phone: '+1234567897' },
+                { name: 'Tom Martinez', email: 'tom@example.com', password: 'password123', phone: '+1234567898' },
+                { name: 'Amy Taylor', email: 'amy@example.com', password: 'password123', phone: '+1234567899' },
+            ];
+            
+            showNotification('Registering test users...', 'info');
+            let successCount = 0;
+            let failCount = 0;
+            
+            for (const user of testUsers) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(user)
+                    });
+                    
+                    if (res.ok) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                    }
+                } catch (error) {
+                    failCount++;
+                }
+            }
+            
+            showNotification(`Registered ${successCount} test users! ${failCount > 0 ? `(${failCount} already existed)` : ''}`, 'success');
+        }
+        
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+        
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('active');
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('registerModal').classList.remove('active');
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch(`${API_BASE}/api/restaurants`);
+                const restaurantsData = await res.json();
+                restaurants = Array.isArray(restaurantsData) ? restaurantsData : [];
+                menuItems = []; // Clear existing items
+                
+                // Load menu items from all restaurants
+                for (const restaurant of restaurants) {
+                    // Only fetch menu if restaurant has a valid ID
+                    if (restaurant && restaurant.id) {
+                        try {
+                            const menuRes = await fetch(`${API_BASE}/api/restaurants/${restaurant.id}/menu`);
+                            if (menuRes.ok) {
+                                const menu = await menuRes.json();
+                                if (Array.isArray(menu)) {
+                                    menu.forEach(item => {
+                                        menuItems.push({
+                                            ...item,
+                                            restaurantId: restaurant.id,
+                                            restaurantName: restaurant.name
+                                        });
+                                    });
+                                }
+                            }
+                        } catch (e) {
+                            console.error(`Error loading menu for restaurant ${restaurant.id}:`, e);
+                        }
+                    }
+                }
+                
+                displayDishes();
+                updateOrderMenu();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+
+        function getRestaurantEmoji(cuisine) {
+            const emojis = {
+                'italian': '🍝',
+                'pizza': '🍕',
+                'burger': '🍔',
+                'chinese': '🥟',
+                'japanese': '🍱',
+                'mexican': '🌮',
+                'indian': '🍛'
+            };
+            return emojis[cuisine?.toLowerCase()] || '🍽️';
+        }
+
+        function toggleFavoriteRestaurant(restaurantId) {
+            if (favoriteRestaurants.has(restaurantId)) {
+                favoriteRestaurants.delete(restaurantId);
+                showNotification('Removed from favorites', 'info');
+            } else {
+                favoriteRestaurants.add(restaurantId);
+                showNotification('Added to favorites', 'success');
+            }
+            localStorage.setItem('favoriteRestaurants', JSON.stringify(Array.from(favoriteRestaurants)));
+            displayRestaurants(currentRestaurantsFilter === 'favorites');
+        }
+
+        function selectRestaurant(restaurantId) {
+            const restaurant = restaurants.find(r => r.id === restaurantId);
+            if (restaurant) {
+                alert(`Selected: ${restaurant.name}\n\nMenu items from this restaurant will appear in Popular Dishes section.`);
+                currentCategory = 'all';
+                displayDishes();
+            }
+        }
+
+        async function loadOrderHistory() {
+            try {
+                const res = await fetch(`${API_BASE}/api/orders`);
+                const orders = await res.json();
+                lastOrders = orders || [];
+                const list = document.getElementById('orderHistoryList');
+                if (!orders || orders.length === 0) {
+                    list.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#999; padding:20px;">No orders yet. Place an order to see it here.</div>';
+                    return;
+                }
+                list.innerHTML = orders.slice().reverse().map(order => {
+                    const items = order.items || [];
+                    const totalItems = items.reduce((sum, i) => sum + (i.quantity || 0), 0);
+                    const summary = items.slice(0, 3).map(i => `${i.menuItemName || 'Item'} x${i.quantity}`).join(', ');
+                    return `
+                        <div class="dish-card" style="position: relative; cursor:pointer;" onclick="openOrderDetailModal('${order.orderId}')">
+                            <div class="dish-name" style="margin-bottom:4px;">Order ${order.orderId}</div>
+                            <div class="status-badge status-${order.status}">${order.status}</div>
+                            <div style="margin:10px 0; color:#666; font-size:14px;">
+                                ${summary || 'No items'}
+                            </div>
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-top:10px;">
+                                <div style="color:#ff9800; font-weight:700;">$${(order.total_amount || order.totalAmount || 0).toFixed(2)}</div>
+                                <div style="color:#666; font-size:13px;">${totalItems} item(s)</div>
+                            </div>
+                            <div style="color:#999; font-size:12px; margin-top:8px;">${new Date(order.created_at || order.createdAt).toLocaleString()}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading order history', error);
+                showNotification('Error loading order history', 'error');
+            }
+        }
+
+        async function loadNotificationFeed() {
+            try {
+                const res = await fetch(`${API_BASE}/api/notifications`);
+                const notifications = await res.json();
+                const list = document.getElementById('notificationsList');
+                if (!notifications || notifications.length === 0) {
+                    list.innerHTML = '<div style="text-align:center; color:#999; padding:40px; background:white; border-radius:15px;"><div style="font-size:48px; margin-bottom:15px;">📬</div><div>No notifications yet. Order confirmations and delivery updates will appear here.</div></div>';
+                    return;
+                }
+                
+                // Filter for order confirmations and delivery messages
+                const orderNotifications = notifications.filter(n => 
+                    n.type && (n.type.includes('ORDER') || n.type.includes('DELIVERY'))
+                ).slice().reverse();
+                
+                if (orderNotifications.length === 0) {
+                    list.innerHTML = '<div style="text-align:center; color:#999; padding:40px; background:white; border-radius:15px;"><div style="font-size:48px; margin-bottom:15px;">📬</div><div>No order notifications yet.</div></div>';
+                    return;
+                }
+                
+                list.innerHTML = orderNotifications.map(n => {
+                    const icon = n.type.includes('CONFIRMED') ? '✅' : 
+                                 n.type.includes('DELIVERED') ? '🎉' : 
+                                 n.type.includes('DELIVERY') ? '🚚' : 
+                                 n.type.includes('PREPARING') ? '👨‍🍳' : '📦';
+                    const color = n.type.includes('CONFIRMED') ? '#4caf50' : 
+                                 n.type.includes('DELIVERED') ? '#00c853' : 
+                                 n.type.includes('DELIVERY') ? '#673ab7' : 
+                                 n.type.includes('PREPARING') ? '#ff9800' : '#2196f3';
+                    
+                    return `
+                    <div style="background:#fff; border-radius:15px; padding:20px; margin-bottom:15px; box-shadow:0 2px 8px rgba(0,0,0,0.1); border-left:4px solid ${color};">
+                        <div style="display:flex; align-items:center; margin-bottom:10px;">
+                            <div style="font-size:32px; margin-right:12px;">${icon}</div>
+                            <div style="flex:1;">
+                                <div style="font-weight:600; font-size:16px; margin-bottom:4px; color:#333;">${n.title}</div>
+                                <div style="font-size:13px; color:#666;">${n.message}</div>
+                            </div>
+                        </div>
+                        ${n.orderId ? `<div style="font-size:12px; color:#999; margin-top:8px;">Order ID: <strong>${n.orderId}</strong></div>` : ''}
+                        <div style="font-size:11px; color:#999; margin-top:6px;">${new Date(n.timestamp).toLocaleString()}</div>
+                    </div>
+                `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading notifications', error);
+                showNotification('Error loading notifications', 'error');
+            }
+        }
+
+        function closeOrderDetailModal() {
+            document.getElementById('orderDetailModal').classList.remove('active');
+        }
+
+        function openOrderDetailModal(orderId) {
+            const order = (lastOrders || []).find(o => o.orderId === orderId);
+            if (!order) {
+                showNotification('Order details not found', 'error');
+                return;
+            }
+
+            const titleEl = document.getElementById('orderDetailTitle');
+            const bodyEl = document.getElementById('orderDetailBody');
+            titleEl.textContent = `Order ${order.orderId}`;
+
+            const items = order.items || [];
+            const steps = ['CREATED','CONFIRMED','PREPARING','OUT_FOR_DELIVERY','DELIVERED'];
+
+            bodyEl.innerHTML = `
+                <div style="margin-bottom: 15px; font-size:14px; color:#666;">
+                    <div><strong>Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></div>
+                    <div style="margin-top:6px;"><strong>Placed at:</strong> ${new Date(order.created_at || order.createdAt).toLocaleString()}</div>
+                    <div style="margin-top:6px;"><strong>Delivery address:</strong> ${order.delivery_address || order.deliveryAddress}</div>
+                    <div style="margin-top:6px;"><strong>Total:</strong> $${(order.total_amount || order.totalAmount || 0).toFixed(2)}</div>
+                </div>
+                <h4 style="margin:10px 0;">Items</h4>
+                <div>
+                    ${
+                        items.length
+                        ? items.map(i => `
+                            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                                <div>
+                                    <div style="font-weight:600;">${i.menuItemName || 'Item'}</div>
+                                    <div style="font-size:12px; color:#666;">Qty: ${i.quantity}</div>
+                                </div>
+                                <div style="font-weight:600; color:#ff9800;">
+                                    $${(i.price * i.quantity).toFixed(2)}
+                                </div>
+                            </div>
+                        `).join('')
+                        : '<div style="color:#999;">No items</div>'
+                    }
+                </div>
+                <h4 style="margin:15px 0 8px;">Order Progress</h4>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    ${steps.map(step => `
+                        <div style="text-align:center; flex:1;">
+                            <div style="
+                                width:22px;height:22px;
+                                border-radius:50%;
+                                margin:0 auto 5px;
+                                background:${steps.indexOf(step) <= steps.indexOf(order.status) ? '#4caf50' : '#e0e0e0'};
+                                color:white;
+                                font-size:12px;
+                                display:flex;align-items:center;justify-content:center;
+                            ">
+                                ${steps.indexOf(step)+1}
+                            </div>
+                            <div style="font-size:10px; color:#555;">${step.replace(/_/g,' ')}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('orderDetailModal').classList.add('active');
+        }
+
+        function displayDishes() {
+            const grid = document.getElementById('dishesGrid');
+            if (!grid) return;
+            let filteredItems = menuItems.filter(item => item.available);
+            
+            if (currentCategory !== 'all') {
+                filteredItems = filteredItems.filter(item => 
+                    item.category && item.category.toLowerCase().includes(currentCategory)
+                );
+            }
+            
+            if (filteredItems.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">No dishes available. Add restaurants and menu items first!</div>';
+                return;
+            }
+            
+            grid.innerHTML = filteredItems.slice(0, 6).map(item => `
+                <div class="dish-card">
+                    <div class="discount-badge">20% OFF</div>
+                    <div class="favorite-icon">❤️</div>
+                    <div class="dish-image">${getDishEmoji(item.category || 'food')}</div>
+                    <div class="dish-rating">⭐⭐⭐⭐⭐</div>
+                    <div class="dish-name">${item.name}</div>
+                    <div class="dish-footer">
+                        <div class="dish-price">$${item.price.toFixed(2)}</div>
+                        <button class="add-btn" onclick="addToCart(${item.id}, '${item.name}', ${item.price})">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayDishesForOrders() {
+            const grid = document.getElementById('ordersDishesGrid');
+            if (!grid) return;
+            let filteredItems = menuItems.filter(item => item.available);
+            
+            if (currentCategory !== 'all') {
+                filteredItems = filteredItems.filter(item => 
+                    item.category && item.category.toLowerCase().includes(currentCategory)
+                );
+            }
+            
+            if (filteredItems.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">No dishes available. Add restaurants and menu items first!</div>';
+                return;
+            }
+            
+            grid.innerHTML = filteredItems.map(item => `
+                <div class="dish-card">
+                    <div class="discount-badge">20% OFF</div>
+                    <div class="favorite-icon">❤️</div>
+                    <div class="dish-image">${getDishEmoji(item.category || 'food')}</div>
+                    <div class="dish-rating">⭐⭐⭐⭐⭐</div>
+                    <div class="dish-name">${item.name}</div>
+                    <div style="font-size: 12px; color: #666; margin: 5px 0;">${item.restaurantName || 'Restaurant'}</div>
+                    <div class="dish-footer">
+                        <div class="dish-price">$${item.price.toFixed(2)}</div>
+                        <button class="add-btn" onclick="addToCart(${item.id}, '${item.name}', ${item.price})">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRestaurantsForManagement() {
+            const list = document.getElementById('restaurantsPageList');
+            if (!list) return;
+            
+            if (restaurants.length === 0) {
+                list.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999; background: white; border-radius: 15px;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">🍽️</div>
+                    <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #333;">No restaurants yet</div>
+                    <div style="margin-bottom: 20px;">Get started by adding your first restaurant!</div>
+                    <button class="change-btn" onclick="openRestaurantModal()" style="background: #00c853; color: white; padding: 12px 24px; font-size: 16px; font-weight: bold;">➕ Add Your First Restaurant</button>
+                </div>`;
+                return;
+            }
+            
+            list.innerHTML = restaurants.map(r => {
+                const restaurantMenuItems = menuItems.filter(m => m.restaurantId === r.id);
+                return `
+                <div class="dish-card">
+                    <div class="dish-image" style="height: 180px; font-size: 80px;">${getRestaurantEmoji(r.cuisine)}</div>
+                    <div class="dish-name" style="margin-top: 10px;">${r.name}</div>
+                    <div style="color: #666; margin: 10px 0;">
+                        <div style="font-weight: 600; color: #ff9800;">${r.cuisine || 'Restaurant'}</div>
+                        <div style="font-size: 13px; margin-top: 5px;">📍 ${r.address || 'Address not provided'}</div>
+                        ${r.phone ? `<div style="font-size: 13px; margin-top: 3px;">📞 ${r.phone}</div>` : ''}
+                        <div style="font-size: 13px; margin-top: 5px; color: #00c853; font-weight: 600;">🍕 ${restaurantMenuItems.length} Menu Items</div>
+                    </div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px;">
+                        <button class="change-btn" onclick="openMenuItemModal(${r.id});" style="flex: 1; background: #ff9800; color: white; padding: 8px; font-size: 12px;">Add Menu Item</button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function getDishEmoji(category) {
+            const emojis = {
+                'burger': '🍔',
+                'pizza': '🍕',
+                'chicken': '🍗',
+                'seafood': '🐟',
+                'beverage': '☕',
+                'pizza': '🍕'
+            };
+            return emojis[category.toLowerCase()] || '🍽️';
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            displayDishes();
+            // Also update orders page if it's visible
+            const ordersPageSection = document.getElementById('ordersPageSection');
+            if (ordersPageSection && !ordersPageSection.classList.contains('hidden')) {
+                displayDishesForOrders();
+            }
+        }
+
+        function addToCart(itemId, name, price) {
+            const item = menuItems.find(m => m.id === itemId);
+            if (!item) return;
+
+            // Enforce single-restaurant cart
+            const items = Object.values(cart);
+            if (items.length > 0) {
+                const firstItem = menuItems.find(m => m.id === items[0].id);
+                if (firstItem && firstItem.restaurantId !== item.restaurantId) {
+                    showNotification('Please add items from the same restaurant in one order', 'error');
+                    return;
+                }
+            }
+
+            if (cart[itemId]) {
+                cart[itemId].quantity += 1;
+            } else {
+                cart[itemId] = {
+                    id: itemId,
+                    name: name,
+                    price: price,
+                    quantity: 1
+                };
+            }
+            updateOrderMenu();
+            showNotification(`${name} added to cart!`, 'success');
+        }
+
+        function removeFromCart(itemId) {
+            const item = cart[itemId];
+            delete cart[itemId];
+            updateOrderMenu();
+            if (item) {
+                showNotification(`${item.name} removed from cart`, 'info');
+            }
+        }
+
+        function updateQuantity(itemId, change) {
+            if (cart[itemId]) {
+                cart[itemId].quantity += change;
+                if (cart[itemId].quantity <= 0) {
+                    removeFromCart(itemId);
+                } else {
+                    updateOrderMenu();
+                }
+            }
+        }
+
+        function updateOrderMenu() {
+            const list = document.getElementById('orderItemsList');
+            const totalEl = document.getElementById('orderTotal');
+            
+            const items = Object.values(cart);
+            
+            if (items.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Your cart is empty</div>';
+                totalEl.textContent = '$0.00';
+                return;
+            }
+            
+            let subtotal = 0;
+            list.innerHTML = items.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                return `
+                    <div class="order-item">
+                        <div class="order-item-image">${getDishEmoji('food')}</div>
+                        <div class="order-item-details">
+                            <div class="order-item-name">${item.name}</div>
+                            <div class="order-item-quantity">x${item.quantity}</div>
+                        </div>
+                        <div class="order-item-price">$${itemTotal.toFixed(2)}</div>
+                        <button onclick="removeFromCart(${item.id})" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">×</button>
+                    </div>
+                `;
+            }).join('');
+            
+            const delivery = 4.00;
+            const total = subtotal + delivery;
+            totalEl.textContent = `$${total.toFixed(2)}`;
+        }
+
+        async function checkout() {
+            const items = Object.values(cart);
+            if (items.length === 0) {
+                showNotification('Your cart is empty!', 'warning');
+                return;
+            }
+            
+            // Get restaurant ID from first item
+            const firstItem = menuItems.find(m => m.id === items[0].id);
+            if (!firstItem) {
+                showNotification('Please select items from the same restaurant', 'error');
+                return;
+            }
+            
+            const restaurantId = firstItem.restaurantId;
+            const userId = currentUser ? currentUser.id : 'user123';
+            const deliveryAddress = document.querySelector('.address-text')?.textContent || '90 Street, 81';
+            
+            const orderData = {
+                userId: userId,
+                restaurantId: restaurantId,
+                items: items.map(item => ({
+                    menuItemId: item.id,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                deliveryAddress: deliveryAddress,
+                deliveryLatitude: 40.7580,
+                deliveryLongitude: -74.9855
+            };
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (res.ok) {
+                    const order = await res.json();
+                    showNotification('Order placed successfully! Order ID: ' + order.orderId, 'success');
+                    cart = {};
+                    updateOrderMenu();
+                    
+                    // Simulate order progress with notifications
+                    simulateOrderProgress(order.orderId);
+                } else {
+                    const error = await res.json();
+                    showNotification('Error: ' + error.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error creating order', 'error');
+            }
+        }
+
+        async function simulateOrderProgress(orderId) {
+            // Order placed notification (already shown)
+            
+            // Auto-accept order after 2 seconds
+            setTimeout(async () => {
+                try {
+                    await fetch(`${API_BASE}/api/orders/${orderId}/restaurant-action`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'accept' })
+                    });
+                    showNotification(`✅ Order ${orderId}: Your order has been confirmed!`, 'success');
+                } catch (e) {}
+            }, 2000);
+            
+            // Start preparing after 5 seconds
+            setTimeout(async () => {
+                try {
+                    await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'PREPARING' })
+                    });
+                    showNotification(`👨‍🍳 Order ${orderId}: Restaurant is preparing your food...`, 'info');
+                } catch (e) {}
+            }, 5000);
+            
+            // Out for delivery after 10 seconds
+            setTimeout(async () => {
+                try {
+                    await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'OUT_FOR_DELIVERY' })
+                    });
+                    showNotification(`🚚 Order ${orderId}: Your order is out for delivery!`, 'info');
+                } catch (e) {}
+            }, 10000);
+            
+            // Reached location after 15 seconds
+            setTimeout(() => {
+                showNotification(`📍 Order ${orderId}: Your order has reached the delivery location!`, 'success');
+            }, 15000);
+            
+            // Delivered after 20 seconds
+            setTimeout(async () => {
+                try {
+                    await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'DELIVERED' })
+                    });
+                    showNotification(`🎉 Order ${orderId}: Your order has been delivered! Enjoy your meal!`, 'success');
+                } catch (e) {}
+            }, 20000);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 400px;
+                font-weight: 500;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        function showSection(section) {
+            // Handle navigation highlight
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (event && event.target) {
+                event.target.closest('.nav-item')?.classList.add('active');
+            } else {
+                // Find nav item by section name
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes(section.toLowerCase())) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+
+            // Get all sections
+            const dashboardSections = document.querySelectorAll('.dashboard-section');
+            const ordersPageSection = document.getElementById('ordersPageSection');
+            const restaurantsPageSection = document.getElementById('restaurantsPageSection');
+            const notificationsSection = document.getElementById('notificationsSection');
+
+            // Hide all sections first
+            dashboardSections.forEach(s => s.classList.add('hidden'));
+            ordersPageSection?.classList.add('hidden');
+            restaurantsPageSection?.classList.add('hidden');
+            notificationsSection?.classList.add('hidden');
+
+            if (section === 'dashboard') {
+                // Show dashboard (popular dishes, categories)
+                dashboardSections.forEach(s => s.classList.remove('hidden'));
+            }
+
+            if (section === 'orders') {
+                // Show orders page: dishes, cart, payment, order history
+                ordersPageSection?.classList.remove('hidden');
+                displayDishesForOrders();
+                loadOrderHistory();
+                updateOrderMenu();
+                // Ensure right sidebar (cart) is visible
+                document.querySelector('.right-sidebar')?.style.setProperty('display', 'block');
+            }
+
+            if (section === 'restaurants') {
+                // Show only restaurant management
+                restaurantsPageSection?.classList.remove('hidden');
+                displayRestaurantsForManagement();
+            }
+
+            if (section === 'notifications') {
+                // Show order confirmations and delivery messages
+                notificationsSection?.classList.remove('hidden');
+                loadNotificationFeed();
+            }
+        }
+
+        function openRestaurantModal() {
+            document.getElementById('restaurantModal').classList.add('active');
+        }
+
+        function closeRestaurantModal() {
+            document.getElementById('restaurantModal').classList.remove('active');
+        }
+
+        function openMenuItemModal(restaurantId = null) {
+            const select = document.getElementById('menuRestaurantSelect');
+            if (restaurants.length === 0) {
+                showNotification('Please add a restaurant first!', 'error');
+                openRestaurantModal();
+                return;
+            }
+            select.innerHTML = '<option value="">Select Restaurant</option>' +
+                restaurants.map(r => `<option value="${r.id}" ${restaurantId && r.id == restaurantId ? 'selected' : ''}>${r.name}</option>`).join('');
+            document.getElementById('menuItemModal').classList.add('active');
+            if (restaurantId) {
+                select.value = restaurantId;
+            }
+        }
+
+        function closeMenuItemModal() {
+            document.getElementById('menuItemModal').classList.remove('active');
+        }
+
+        async function addRestaurant(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            data.latitude = 40.7128;
+            data.longitude = -74.0060;
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/restaurants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    const newRestaurant = await res.json();
+                    showNotification('Restaurant added successfully!', 'success');
+                    event.target.reset();
+                    closeRestaurantModal();
+                    await loadData(); // Reload to show new restaurant
+                    displayRestaurantsForManagement(); // Refresh restaurants page view
+                } else {
+                    const error = await res.json();
+                    showNotification('Error: ' + error.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error adding restaurant', 'error');
+            }
+        }
+
+        async function addMenuItem(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            data.available = true;
+            
+            try {
+                const res = await fetch(`${API_BASE}/api/restaurants/${data.restaurantId}/menu/items`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    showNotification('Menu item added successfully!', 'success');
+                    event.target.reset();
+                    // Keep restaurant selected in dropdown
+                    const restaurantSelect = document.getElementById('menuRestaurantSelect');
+                    if (restaurantSelect) {
+                        restaurantSelect.value = data.restaurantId;
+                    }
+                    await loadData(); // Reload to show new menu item
+                    displayRestaurantsForManagement(); // Refresh restaurants page view
+                    // Don't close modal - allow adding more items
+                    // User can close manually or click outside
+                } else {
+                    const error = await res.json();
+                    showNotification('Error: ' + error.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error adding menu item', 'error');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Add button to open menu item modal in the UI
+        function addManageButton() {
+            const sectionHeader = document.querySelector('.section-header');
+            if (sectionHeader && !document.getElementById('manageBtn')) {
+                const btn = document.createElement('button');
+                btn.id = 'manageBtn';
+                btn.className = 'change-btn';
+                btn.textContent = '+ Add Menu Item';
+                btn.onclick = openMenuItemModal;
+                btn.style.marginLeft = '10px';
+                sectionHeader.appendChild(btn);
+            }
+        }
+
+        // Load data on page load and refresh every 5 seconds
+        loadData();
+        setInterval(loadData, 5000); // Auto-refresh every 5 seconds
+        
+        // Initialize: Show dashboard by default (without event)
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        document.querySelector('.nav-item')?.classList.add('active');
+        const dashboardSections = document.querySelectorAll('.dashboard-section');
+        dashboardSections.forEach(s => s.classList.remove('hidden'));
+    </script>
+</body>
+</html>
